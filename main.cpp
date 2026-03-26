@@ -202,15 +202,70 @@ private:
     int doctorCounter;
 
 public:
-    Hospital();
+    Hospital(){
+        patientCounter =1;
+        doctorCounter =1;
+    }
 
-    int registerPatient(string name, int age, string contact);
+    int registerPatient(string name, int age, string contact){
+        Patient p(patientCounter, name , age , contact);
+        patients.push_back(p);
+        cout<<"patient registered with ID: " << patientCounter<<endl;
+        return patientCounter++;
+    }
+
+    void admitPatient(int patientId, RoomType type){
+        for(auto &p : patients){
+            if (p.getId() == patientId)
+            {
+                p.admitPatient(type);
+                return;
+            }
+        }
+        cout<<"Patient not found."<<endl;
+    }
+
+    void bookAppointment(int doctorId, int patientId){
+        bool patientExists = false ; 
+        for(auto &p : patients){
+            if (p.getId() == patientId)
+            {
+                patientExists = true ;  
+                break;
+            }
+        }
+        if (!patientExists)
+        {
+            cout<<"Patient not found."<<endl;
+            return ;
+        }
+        for(auto &d : doctors){
+            if (d.getId() == doctorId)
+            {
+                d.addAppointment(patientId);
+                cout<<"Appointment booked successfully." <<endl;
+                return;
+            }
+        }
+        cout<<"Doctor not found."<<endl;
+    }
+    
+    void displayPatientInfo(int patientId){
+        for(auto &p : patients){
+            if (p.getId() == patientId)
+            {
+                cout<<"\nPatient ID: " << p.getId()<<endl;
+                cout<<"Name: "<<p.getName()<<endl;
+                cout<<"Admitted: "<<(p.getAdmissionStatus() ? "Yes" : "No")<<endl;
+                return;
+            }
+        }
+        cout<<"Patient not found."<<endl;
+    }
+
     int addDoctor(int id,string name, int age ,Department dept,int experience,string contact);
-    void admitPatient(int patientId, RoomType type);
     void addEmergency(int patientId);
     int handleEmergency();
-    void bookAppointment(int doctorId, int patientId);
-    void displayPatientInfo(int patientId);
     void displayDoctorInfo(int doctorId);
 };
 
