@@ -263,10 +263,58 @@ public:
         cout<<"Patient not found."<<endl;
     }
 
-    int addDoctor(int id,string name, int age ,Department dept,int experience,string contact);
-    void addEmergency(int patientId);
-    int handleEmergency();
-    void displayDoctorInfo(int doctorId);
+    int addDoctor(int id, string name, int age, Department dept, int experience, string contact) {
+    for (int i=0;i<doctors.size();i++) {
+        if (doctors[i].getId()==id) {
+            cout<<"Doctor already exist "<<endl;
+            return -1;
+        }
+    }
+    doctors.push_back(Doctor(id, name, age, dept, experience, contact));
+    
+    cout << "Doctor added successfully with ID: " << id << endl;
+    return id;
+    }
+
+    void addEmergency(int patientId) {
+    emergencyQueue.push(patientId);
+    cout << "Emergency added for patient ID: " << patientId << endl;
+    }
+
+    int handleEmergency() {
+    if (emergencyQueue.empty()) {
+        cout << "No emergency cases.\n";
+        return -1;
+    }
+    int patientId = emergencyQueue.front();
+    emergencyQueue.pop();
+
+    cout << "Handling emergency for patient ID: " << patientId << endl;
+    return patientId;
+    }
+    
+    void displayDoctorInfo(int doctorId) {
+    if (doctors.empty()) {
+        cout << "No doctors available.\n";
+        return;
+    }
+
+    for (int i = 0; i < doctors.size(); i++) {
+        if (doctors[i].getId() == doctorId) {
+            cout << "\n--- Doctor Information ---\n";
+            cout << "ID: " << doctors[i].getId() << endl;
+            cout << "Name: " << doctors[i].getName() << endl;
+            cout << "Age: " << doctors[i].getage() << endl;
+            cout << "Department: " << doctors[i].getDepartment() << endl;
+            cout << "Experience: " << doctors[i].getexperience() << " years\n";
+            cout << "Contact: " << doctors[i].getcontact() << endl;
+            return;
+        }
+    }
+
+    cout << "Doctor not found!\n";
+    }
+
 };
 
 // ========== MAIN PROGRAM ========== //
